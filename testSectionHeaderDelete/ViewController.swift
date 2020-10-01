@@ -12,7 +12,6 @@ class ViewController: UIViewController {
     var sections = [Section]() {
         didSet {
             DispatchQueue.main.async {
-            
                 self.mainView.collectionView.reloadData()
             }
             self.mainView.collectionView.collectionViewLayout = self.createCompositionalLayout(sections: self.sections)
@@ -26,30 +25,30 @@ class ViewController: UIViewController {
     }
     
     lazy private var deleteButton: UIBarButtonItem = {
-    [unowned self] in
+        [unowned self] in
         let barButton = UIBarButtonItem(title: "Delete", style: .done, target: self, action: #selector(deleteSection(_:)))
         barButton.tintColor = .label
         return barButton
     }()
     
     lazy private var addButton: UIBarButtonItem = {
-    [unowned self] in
+        [unowned self] in
         let barButton = UIBarButtonItem(title: "Add", style: .done, target: self, action: #selector(addSection(_:)))
         barButton.tintColor = .label
         return barButton
     }()
     
     @objc func addSection(_ sender: UIBarButtonItem) {
-     let section = Section(id: UUID().uuidString, type: .mediumCell, title: "Hi", items: [Item(id: UUID().uuidString, name: "test")])
+        let section = Section(id: UUID().uuidString, type: .mediumCell, title: "Hi", items: [Item(id: UUID().uuidString, name: "test")])
         sections.append(section)
     }
     
     @objc func deleteSection(_ sender: UIBarButtonItem) {
         if !sections.isEmpty {
-        sections.removeLast()
+            sections.removeLast()
         }
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.rightBarButtonItems = [addButton, deleteButton]
@@ -57,13 +56,12 @@ class ViewController: UIViewController {
         loadData()
         
     }
-
     
     private func loadData() {
         let data = [Section(id: UUID().uuidString, type: .mediumCell, title: "Hi", items: [Item(id: UUID().uuidString, name: "test")]), Section(id: UUID().uuidString, type: .mediumCell, title: "test", items: [Item(id: UUID().uuidString, name: "test"),Item(id: UUID().uuidString, name: "test")])]
         sections = data
     }
-
+    
 }
 
 extension ViewController: UICollectionViewDataSource {
@@ -72,44 +70,37 @@ extension ViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MediumCell.reuseIdentifier, for: indexPath) as? MediumCell else { fatalError("unable to dequeue MediumCell") }
-            return cell
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MediumCell.reuseIdentifier, for: indexPath) as? MediumCell else { fatalError("unable to dequeue MediumCell") }
+        return cell
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return sections.count
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-         guard let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: MainSectionHeader.reuseIdentifier, for: indexPath) as? MainSectionHeader else { fatalError("Section Header failed to load") }
-                    sectionHeader.title.text = sections[indexPath.section].title.capitalized
-                      return sectionHeader
+        guard let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: MainSectionHeader.reuseIdentifier, for: indexPath) as? MainSectionHeader else { fatalError("Section Header failed to load") }
+        sectionHeader.title.text = sections[indexPath.section].title.capitalized
+        return sectionHeader
     }
-
+    
 }
-
 
 extension ViewController {
     
     func createCompositionalLayout(sections: [Section]) -> UICollectionViewLayout {
-    guard !sections.isEmpty else { return UICollectionViewLayout() }
-           let layout = UICollectionViewCompositionalLayout { [weak self]
-               sectionIndex, layoutEnvironment in
-               let section = sections[sectionIndex]
-
-                return self?.createMediumTableSection(using: section)
-               }
-           
-           let configuration = UICollectionViewCompositionalLayoutConfiguration()
-           configuration.interSectionSpacing = 15
-           layout.configuration = configuration
-           return layout
-    }
-    
-    func makeEmptyBackgroundDecoration() -> NSCollectionLayoutDecorationItem {
-        let backgroundItem = NSCollectionLayoutDecorationItem.background(elementKind: "background")
-        backgroundItem.contentInsets = NSDirectionalEdgeInsets(top: 50, leading: 0, bottom: 20, trailing: 0)
-        return backgroundItem
+        guard !sections.isEmpty else { return UICollectionViewLayout() }
+        let layout = UICollectionViewCompositionalLayout { [weak self]
+            sectionIndex, layoutEnvironment in
+            let section = sections[sectionIndex]
+            
+            return self?.createMediumTableSection(using: section)
+        }
+        
+        let configuration = UICollectionViewCompositionalLayoutConfiguration()
+        configuration.interSectionSpacing = 15
+        layout.configuration = configuration
+        return layout
     }
     
     func createMediumTableSection(using section: Section) -> NSCollectionLayoutSection {
@@ -129,11 +120,10 @@ extension ViewController {
     }
     
     func createSectionHeader() -> NSCollectionLayoutBoundarySupplementaryItem {
-          let layoutSectionHeaderSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.93), heightDimension: .estimated(80))
+        let layoutSectionHeaderSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.93), heightDimension: .estimated(80))
         let layoutSectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: layoutSectionHeaderSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
-          return layoutSectionHeader
-      }
-
+        return layoutSectionHeader
+    }
     
 }
 
