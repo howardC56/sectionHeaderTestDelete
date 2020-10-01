@@ -32,6 +32,18 @@ class ViewController: UIViewController {
         return barButton
     }()
     
+    lazy private var addButton: UIBarButtonItem = {
+    [unowned self] in
+        let barButton = UIBarButtonItem(title: "Add", style: .done, target: self, action: #selector(addSection(_:)))
+        barButton.tintColor = .label
+        return barButton
+    }()
+    
+    @objc func addSection(_ sender: UIBarButtonItem) {
+     let section = Section(id: UUID().uuidString, type: .mediumCell, title: "Hi", items: [Item(id: UUID().uuidString, name: "test")])
+        sections.append(section)
+    }
+    
     @objc func deleteSection(_ sender: UIBarButtonItem) {
         if !sections.isEmpty {
         sections.removeLast()
@@ -40,9 +52,10 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.rightBarButtonItem = deleteButton
+        navigationItem.rightBarButtonItems = [addButton, deleteButton]
         mainView.collectionView.dataSource = self
         loadData()
+        
     }
 
     
