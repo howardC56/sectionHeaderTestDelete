@@ -6,3 +6,5 @@ Not Solved:
 2. add 1 section
 3. delete section
 4. crash - "Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'Invalid section 0."
+
+another issue is If the app starts off with no data then you add data, nothing shows for the collectionview
